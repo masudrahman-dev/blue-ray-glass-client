@@ -75,16 +75,7 @@ const App = () => {
             </li>
           </ul>
         </div>
-        <div className="flex  px-4 py-3 space-y-3 lg:items-center justify-end lg:space-y-0 lg:space-x-4">
-          <div className="flex items-center  space-x-4">
-            <span className="">Total Products : {data?.length || 0} </span>
-            <h5 className="">
-              <span>Total Price : </span>
-              {/* <span>${total}</span> */}
-            </h5>
-            <button className="btn btn-accent">Pay All</button>
-          </div>
-        </div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -100,6 +91,9 @@ const App = () => {
                   name
                 </th>
 
+                <th scope="col" className="px-4 py-3">
+                shipment
+                </th>
                 <th scope="col" className="px-4 py-3">
                   Quantity
                 </th>
@@ -141,6 +135,11 @@ const App = () => {
                     </span>
                   </td>
 
+                  <td className="px-4 py-2 font-medium whitespace-nowrap ">
+                    <p className="flex items-center text-center">
+                      {product?.shipment}
+                    </p>
+                  </td>
                   <td className="px-4 py-2 font-medium whitespace-nowrap ">
                     <p className="flex items-center text-center">
                       {product?.quantity}

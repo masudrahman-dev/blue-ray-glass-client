@@ -1,35 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useQuery } from "@tanstack/react-query";
+import Card from "./components/Card/Card";
+import Spinner from "./components/Spinner/Spinner";
+import { useEffect } from "react";
+import Header from "./components/Header/Header";
+import Table from "./components/Table/Table";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  // const { isLoading, isError, data, error, refetch } = useQuery({
+  //   queryKey: ["products"],
+  //   queryFn: async () => {
+  //     const response = await fetch(`http://localhost:5000/products`);
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
+  //     return response.json();
+  //   },
+  // });
+  const data = null;
+  const handleAddToCart = (cart) => {
+    console.log("click");
+    console.log(cart);
+    // Swal.fire({
+    //   title: "Are you sure?",
+    //   text: "You won't be able to revert this!",
+    //   icon: "warning",
+    //   showCancelButton: true,
+    //   confirmButtonColor: "#3085d6",
+    //   cancelButtonColor: "#d33",
+    //   confirmButtonText: "Yes, delete it!",
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     Swal.fire("Deleted!", "Your file has been deleted.", "success");
+    //   }
+    // });
+  };
+
+  console.log(data);
+  // if (isLoading) {
+  //   return <Spinner />;
+  // }
+
+  // if (isError) {
+  //   return <span>Error: {error.message}</span>;
+  // }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main className="max-w-screen-xl mx-auto">
+      <Header></Header>
+      <Table></Table>
+      <div className="grid gap-8 grid-cols-1 border p-4  md:grid-cols-2 lg:grid-cols-3">
+        {data?.map((product) => (
+          <Card
+            key={product._id}
+            product={product}
+            handleAddToCart={handleAddToCart}
+          ></Card>
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </main>
+  );
+};
 
-export default App
+export default App;

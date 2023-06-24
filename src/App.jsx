@@ -5,13 +5,14 @@ import { useState } from "react";
 const App = () => {
   const [currentTab, setCurrentTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10; // Number of items per page
+  const [limit, setLimit] = useState(1);
+  // const pageSize = 10; // Number of items per page
 
   const { isLoading, isError, data, error, refetch } = useQuery({
     queryKey: ["products", currentTab, currentPage],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:5000/products?tab=${currentTab}&page=${currentPage}&pageSize=${pageSize}`
+        `http://localhost:5000/products?tab=${currentTab}&page=${currentPage}&limit=${limit}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -177,8 +178,13 @@ const App = () => {
           </span>
           <ul className="inline-flex items-stretch -space-x-px">
             <li>
-              <a
-                href="#"
+              <button
+                disabled={currentPage === 1}
+                onClick={() => {
+                  currentPage === 1
+                    ? setCurrentPage(1)
+                    : setCurrentPage(currentPage - 1);
+                }}
                 className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500   rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
               >
                 <span className="sr-only">Previous</span>
@@ -194,52 +200,22 @@ const App = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-              </a>
+              </button>
             </li>
             <li>
-              <a
-                href="#"
-                className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500   border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                1
-              </a>
+              <span className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500   border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                {currentPage}
+              </span>
             </li>
+
             <li>
-              <a
-                href="#"
-                className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500   border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                2
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                aria-current="page"
-                className="z-10 flex items-center justify-center px-3 py-2 text-sm leading-tight border text-primary-600 bg-primary-50 border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 "
-              >
-                3
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500   border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                ...
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500   border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                100
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
+              <button
+                disabled={currentPage === Math.ceil(100 / limit)}
+                onClick={() => {
+                  currentPage === Math.ceil(100 / limit)
+                    ? setCurrentPage(1)
+                    : setCurrentPage(currentPage + 1);
+                }}
                 className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500   rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
               >
                 <span className="sr-only">Next</span>
@@ -255,12 +231,12 @@ const App = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-              </a>
+              </button>
             </li>
           </ul>
         </nav>
       </main>
-      <div className="border">
+      {/* <div className="border">
         <ul className="flex justify-center p-7">
           {Array.from(
             { length: Math.ceil(data?.length / pageSize) },
@@ -278,7 +254,7 @@ const App = () => {
             )
           )}
         </ul>
-      </div>
+      </div> */}
     </>
   );
 };

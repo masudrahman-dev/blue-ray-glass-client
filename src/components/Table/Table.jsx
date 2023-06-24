@@ -1,5 +1,7 @@
 const Table = () => {
-  const data = [{}];
+  const data = [
+    {}
+  ];
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900 py-3 sm:py-5">
@@ -75,10 +77,12 @@ const Table = () => {
                       </td>
 
                       <td className="px-4 py-2 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        3
+                        <p className="flex items-center text-center">
+                         3
+                        </p>
                       </td>
                       <td className="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        price
+                        {/* $ {item?.price} */}
                       </td>
 
                       <td className="px-4 link py-2 font-medium text-gray-900 whitespace-nowrap dark:text-warning">

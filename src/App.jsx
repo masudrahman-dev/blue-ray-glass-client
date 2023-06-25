@@ -4,15 +4,14 @@ import { useState } from "react";
 
 const App = () => {
   const [currentTab, setCurrentTab] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(1);
-  // const pageSize = 10; // Number of items per page
-
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const { isLoading, isError, data, error, refetch } = useQuery({
-    queryKey: ["products", currentTab, currentPage],
+    queryKey: ["products", currentTab, page],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:5000/products?tab=${currentTab}&page=${currentPage}&limit=${limit}`
+        // `https://blue-ray-glass-server.vercel.app/products?tab=${currentTab}&page=${currentPage}&limit=${limit}`
+        `http://localhost:5000/products?tab=${currentTab}&page=${page}&limit=${limit}}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -21,18 +20,29 @@ const App = () => {
     },
   });
 
-  console.log(data);
+  // console.log(data);
   // Handle tab click event
   const handleTabClick = (tab) => {
     setCurrentTab(tab);
-    setCurrentPage(1);
+    // setCurrentPage(1);
     // refetch(); // Fetch data for the selected tab and first page
   };
+  let size = Math.ceil(90 / limit);
 
-  // Handle page change event
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    // refetch(); // Fetch data for the selected tab and current page
+  const handlePreviousPage = () => {
+    if (page === 1) {
+      setPage(1);
+    } else {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page === size) {
+      setPage(size);
+    } else {
+      setPage(page + 1);
+    }
   };
   // console.log(data);
   if (isLoading) {
@@ -77,8 +87,8 @@ const App = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <table className="w-full text-sm text-left   ">
+            <thead className="text-xs dark:text-white uppercase  dark:bg-gray-800  ">
               <tr>
                 <th scope="col" className="p-4">
                   #
@@ -92,7 +102,7 @@ const App = () => {
                 </th>
 
                 <th scope="col" className="px-4 py-3">
-                shipment
+                  shipment
                 </th>
                 <th scope="col" className="px-4 py-3">
                   Quantity
@@ -110,10 +120,10 @@ const App = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.map((product, index) => (
+              {data?.products?.map((product, index) => (
                 <tr
                   key={product?._id}
-                  className="border-b dark:border-gray-600  hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="border-b dark:border-gray-600  hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white"
                 >
                   <td className="w-4 px-4 py-3">
                     <div className="flex items-center">{index + 1}</div>
@@ -169,22 +179,18 @@ const App = () => {
           className="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0"
           aria-label="Table navigation"
         >
-          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-            Showing
-            <span className="font-semibold ">1-10</span>
-            of
-            <span className="font-semibold ">1000</span>
+          <span className="text-sm font-normal   ">
+            <span className="font-semibold ">
+              {" "}
+              Total Pages: {data.totalPages}
+            </span>
           </span>
           <ul className="inline-flex items-stretch -space-x-px">
             <li>
               <button
-                disabled={currentPage === 1}
-                onClick={() => {
-                  currentPage === 1
-                    ? setCurrentPage(1)
-                    : setCurrentPage(currentPage - 1);
-                }}
-                className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500   rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                disabled={page === 1}
+                onClick={handlePreviousPage}
+                className="flex items-center justify-center h-full py-1.5 px-3 ml-0    rounded-l-lg border dark:text-slate-300 border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700   dark:hover:bg-gray-700 dark:hover:text-white"
               >
                 <span className="sr-only">Previous</span>
                 <svg
@@ -202,20 +208,18 @@ const App = () => {
               </button>
             </li>
             <li>
-              <span className="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500   border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                {currentPage}
+              <span className="flex items-center justify-center px-3 py-2 text-sm leading-tight   
+               border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700   dark:hover:bg-gray-700 dark:text-white">
+                {page}
               </span>
             </li>
 
             <li>
               <button
-                disabled={currentPage === Math.ceil(100 / limit)}
-                onClick={() => {
-                  currentPage === Math.ceil(100 / limit)
-                    ? setCurrentPage(1)
-                    : setCurrentPage(currentPage + 1);
-                }}
-                className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500   rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                disabled={page === size}
+                onClick={handleNextPage}
+                className="flex items-center justify-center h-full py-1.5 px-3 leading-tight    rounded-r-lg border border-gray-300
+                 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700   dark:hover:bg-gray-700 dark:hover:text-white dark:text-slate-300"
               >
                 <span className="sr-only">Next</span>
                 <svg
@@ -235,25 +239,6 @@ const App = () => {
           </ul>
         </nav>
       </main>
-      {/* <div className="border">
-        <ul className="flex justify-center p-7">
-          {Array.from(
-            { length: Math.ceil(data?.length / pageSize) },
-            (_, i) => (
-              <li key={i}>
-                <button
-                  onClick={() => handlePageChange(i + 1)}
-                  className={`${
-                    currentPage === i + 1 ? "" : ""
-                  } px-3 py-1 rounded-md focus:outline-none`}
-                >
-                  12334
-                </button>
-              </li>
-            )
-          )}
-        </ul>
-      </div> */}
     </>
   );
 };

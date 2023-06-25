@@ -58,8 +58,9 @@ const App = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         // `https://blue-ray-glass-server.vercel.app/products/${id}`
+        // .delete(`http://localhost:5000/products/${id}`)
         axios
-          .delete(`http://localhost:5000/products/${id}`)
+          .delete(`https://blue-ray-glass-server.vercel.app/products/${id}`)
           .then((res) => {
             // console.log(res.data.deletedCount);
             if (res.data.deletedCount >= 0) {

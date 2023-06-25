@@ -10,8 +10,8 @@ const App = () => {
     queryKey: ["products", currentTab, page],
     queryFn: async () => {
       const response = await fetch(
-        // `https://blue-ray-glass-server.vercel.app/products?tab=${currentTab}&page=${currentPage}&limit=${limit}`
-        `http://localhost:5000/products?tab=${currentTab}&page=${page}&limit=${limit}}`
+        `https://blue-ray-glass-server.vercel.app/products?tab=${currentTab}&page=${page}&limit=${limit}`
+        // `http://localhost:5000/products?tab=${currentTab}&page=${page}&limit=${limit}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -20,12 +20,11 @@ const App = () => {
     },
   });
 
-  // console.log(data);
   // Handle tab click event
   const handleTabClick = (tab) => {
     setCurrentTab(tab);
-    // setCurrentPage(1);
-    // refetch(); // Fetch data for the selected tab and first page
+
+    refetch();
   };
   let size = Math.ceil(90 / limit);
 
@@ -208,8 +207,10 @@ const App = () => {
               </button>
             </li>
             <li>
-              <span className="flex items-center justify-center px-3 py-2 text-sm leading-tight   
-               border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700   dark:hover:bg-gray-700 dark:text-white">
+              <span
+                className="flex items-center justify-center px-3 py-2 text-sm leading-tight   
+               border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700   dark:hover:bg-gray-700 dark:text-white"
+              >
                 {page}
               </span>
             </li>

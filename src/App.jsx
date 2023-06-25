@@ -1,7 +1,10 @@
 import Spinner from "./components/Spinner/Spinner";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
+// `http://localhost:5000/products?tab=${currentTab}&page=${page}&limit=${limit}`
 const App = () => {
   const [currentTab, setCurrentTab] = useState("all");
   const [page, setPage] = useState(1);
@@ -11,7 +14,6 @@ const App = () => {
     queryFn: async () => {
       const response = await fetch(
         `https://blue-ray-glass-server.vercel.app/products?tab=${currentTab}&page=${page}&limit=${limit}`
-        // `http://localhost:5000/products?tab=${currentTab}&page=${page}&limit=${limit}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -43,6 +45,42 @@ const App = () => {
       setPage(page + 1);
     }
   };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // `https://blue-ray-glass-server.vercel.app/products/${id}`
+        axios
+          .delete(`http://localhost:5000/products/${id}`)
+          .then((res) => {
+            // console.log(res.data.deletedCount);
+            if (res.data.deletedCount >= 0) {
+              Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            }
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Error deleting product",
+            });
+
+            // console.error("Error deleting product:", error);
+          });
+      } else {
+        console.log("cancel");
+      }
+    });
+  };
+
   // console.log(data);
   if (isLoading) {
     return <Spinner />;
@@ -110,7 +148,7 @@ const App = () => {
                   Price
                 </th>
 
-                <th scope="col" className="px-4 py-3">
+                <th scope="col" className="px-4 py-3 ">
                   Delete
                 </th>
                 <th scope="col" className="px-4 py-3">
@@ -161,13 +199,13 @@ const App = () => {
                   <td className="px-4 link py-2 font-medium whitespace-nowrap dark:text-warning">
                     <button
                       onClick={() => handleDelete(product?._id)}
-                      className="btn btn-warning"
+                      className="text-rose-600 underline"
                     >
                       Delete
                     </button>
                   </td>
                   <td className="px-4 link py-2 font-medium whitespace-nowrap dark:text-warning">
-                    <button className="btn btn-success">Pay</button>
+                    <button className="text-indigo-700 underline">Pay</button>
                   </td>
                 </tr>
               ))}
